@@ -29,7 +29,7 @@ router.post('/register', [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { firstName, lastName, email, password, phone, role } = req.body;
+    const { firstName, lastName, email, password, phone, role, specialization } = req.body;
 
     // Check if user exists
     const existingUser = await User.findOne({ email });
@@ -37,17 +37,65 @@ router.post('/register', [
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Create user
-    const user = new User({
+    // Create user data
+    const userData = {
       firstName,
       lastName,
       email,
       password,
       phone,
       role: role || 'customer'
-    });
+    };
 
+    // Add staff-specific fields
+    if (role === 'staff') {
+      userData.specialization = specialization;
+      // Default working hours for staff
+      userData.workingHours = {
+        monday: { start: '09:00', end: '17:00', isWorking: true },
+        tuesday: { start: '09:00', end: '17:00', isWorking: true },
+        wednesday: { start: '09:00', end: '17:00', isWorking: true },
+        thursday: { start: '09:00', end: '17:00', isWorking: true },
+        friday: { start: '09:00', end: '17:00', isWorking: true },
+        saturday: { start: '09:00', end: '13:00', isWorking: true },
+        sunday: { start: '00:00', end: '00:00', isWorking: false }
+      };
+      userData.holidays = [];
+    }
+
+    // Create user
+    const user = new User(userData);
     await user.save();
+
+    // If user is staff, auto-assign to relevant services
+    if (role === 'staff') {
+      const Service = require('../models/Service');
+      
+      // Find services that match the staff's specialization or general services
+      const servicesToUpdate = await Service.find({
+        $or: [
+          { category: { $regex: specialization, $options: 'i' } },
+          { name: { $regex: specialization, $options: 'i' } },
+          { description: { $regex: specialization, $options: 'i' } }
+        ]
+      });
+
+      // If no specific matches, add to general services (first 2 services)
+      if (servicesToUpdate.length === 0) {
+        const generalServices = await Service.find().limit(2);
+        servicesToUpdate.push(...generalServices);
+      }
+
+      // Add staff to services
+      for (const service of servicesToUpdate) {
+        if (!service.staffMembers.includes(user._id)) {
+          service.staffMembers.push(user._id);
+          await service.save();
+        }
+      }
+
+      console.log(`✅ Staff ${firstName} ${lastName} auto-assigned to ${servicesToUpdate.length} services`);
+    }
 
     const token = generateToken(user._id);
 
@@ -58,11 +106,12 @@ router.post('/register', [
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        role: user.role
+        role: user.role,
+        specialization: user.specialization
       }
     });
   } catch (error) {
-    console.error(error);
+    console.error('Registration error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
