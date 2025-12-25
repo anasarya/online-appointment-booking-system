@@ -10,19 +10,23 @@ const router = express.Router();
 // @access  Public
 router.get('/', async (req, res) => {
   try {
-    const { category, isActive = true } = req.query;
+    const { category, isActive } = req.query;
     
     let query = {};
     if (category) query.category = category;
     if (isActive !== undefined) query.isActive = isActive === 'true';
 
+    console.log('Services query:', query);
+    console.log('Request query params:', req.query);
+
     const services = await Service.find(query)
       .populate('staffMembers', 'firstName lastName specialization')
       .sort({ name: 1 });
 
+    console.log('Services found:', services.length);
     res.json(services);
   } catch (error) {
-    console.error(error);
+    console.error('Services route error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

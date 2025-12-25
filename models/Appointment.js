@@ -30,7 +30,7 @@ const appointmentSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['scheduled', 'confirmed', 'completed', 'cancelled', 'no-show'],
+    enum: ['scheduled', 'confirmed', 'completed', 'cancelled', 'no-show', 'rejected'],
     default: 'scheduled'
   },
   notes: {
@@ -57,6 +57,10 @@ const appointmentSchema = new mongoose.Schema({
   confirmationSent: {
     type: Boolean,
     default: false
+  },
+  review: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Review'
   }
 }, {
   timestamps: true

@@ -5,12 +5,15 @@
   "main": "server.js",
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "demo": "concurrently \"npm run demo-server\" \"npm run client\"",
     "server": "nodemon server.js",
+    "demo-server": "nodemon run-without-mongodb.js",
     "client": "cd client && npm start",
     "build": "cd client && npm run build",
     "install-client": "cd client && npm install",
     "heroku-postbuild": "npm run install-client && npm run build",
     "start": "node server.js",
+    "demo-start": "node run-without-mongodb.js",
     "seed": "node scripts/seedDatabase.js"
   },
   "dependencies": {
