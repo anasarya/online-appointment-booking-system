@@ -1,0 +1,56 @@
+{
+  "name": "appointment-booking-system",
+  "version": "1.0.0",
+  "description": "Complete Online Appointment Booking & Management System",
+  "main": "server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "nodemon server.js",
+    "client": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "install-client": "cd client && npm install",
+    "heroku-postbuild": "npm run install-client && npm run build",
+    "start": "node server.js",
+    "seed": "node scripts/seedDatabase.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.5.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "nodemailer": "^6.9.4",
+    "express-validator": "^7.0.1",
+    "helmet": "^7.0.0",
+    "express-rate-limit": "^6.10.0",
+    "moment": "^2.29.4",
+    "node-cron": "^3.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "concurrently": "^8.2.0"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/appointment-booking-system.git"
+  },
+  "keywords": [
+    "appointment",
+    "booking",
+    "management",
+    "react",
+    "nodejs",
+    "mongodb",
+    "express",
+    "healthcare",
+    "salon",
+    "clinic"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

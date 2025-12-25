@@ -1,0 +1,58 @@
+{
+  "name": "Appointment Booking System",
+  "description": "Complete Online Appointment Booking & Management System for service-based businesses",
+  "repository": "https://github.com/yourusername/appointment-booking-system",
+  "logo": "https://cdn.jsdelivr.net/npm/heroicons@1.0.6/outline/calendar.svg",
+  "keywords": ["node", "express", "react", "mongodb", "appointment", "booking"],
+  "image": "heroku/nodejs",
+  "addons": [
+    {
+      "plan": "mongolab:sandbox"
+    }
+  ],
+  "env": {
+    "NODE_ENV": {
+      "description": "Environment",
+      "value": "production"
+    },
+    "JWT_SECRET": {
+      "description": "Secret key for JWT tokens",
+      "generator": "secret"
+    },
+    "JWT_EXPIRE": {
+      "description": "JWT token expiration time",
+      "value": "30d"
+    },
+    "EMAIL_HOST": {
+      "description": "SMTP host for email notifications",
+      "value": "smtp.gmail.com",
+      "required": false
+    },
+    "EMAIL_PORT": {
+      "description": "SMTP port",
+      "value": "587",
+      "required": false
+    },
+    "EMAIL_USER": {
+      "description": "Email username",
+      "required": false
+    },
+    "EMAIL_PASS": {
+      "description": "Email password or app password",
+      "required": false
+    },
+    "EMAIL_FROM": {
+      "description": "From email address",
+      "value": "noreply@appointmentbooking.com",
+      "required": false
+    }
+  },
+  "scripts": {
+    "postdeploy": "npm run seed"
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}

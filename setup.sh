@@ -1,0 +1,46 @@
+#!/bin/bash
+
+echo "========================================"
+echo " Online Appointment Booking System Setup"
+echo "========================================"
+echo
+
+echo "Installing backend dependencies..."
+npm install
+if [ $? -ne 0 ]; then
+    echo "Error installing backend dependencies!"
+    exit 1
+fi
+
+echo
+echo "Installing frontend dependencies..."
+cd client
+npm install
+if [ $? -ne 0 ]; then
+    echo "Error installing frontend dependencies!"
+    exit 1
+fi
+cd ..
+
+echo
+echo "Setting up Tailwind CSS..."
+cd client
+npx tailwindcss init -p
+cd ..
+
+echo
+echo "========================================"
+echo " Setup Complete!"
+echo "========================================"
+echo
+echo "Next steps:"
+echo "1. Make sure MongoDB is running"
+echo "2. Copy .env.example to .env and configure your settings"
+echo "3. Run 'node scripts/seedDatabase.js' to create sample data"
+echo "4. Run 'npm run dev' to start the application"
+echo
+echo "Demo accounts will be created:"
+echo "- Admin: admin@demo.com / password123"
+echo "- Staff: staff@demo.com / password123"
+echo "- Customer: customer@demo.com / password123"
+echo
